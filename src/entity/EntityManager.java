@@ -18,10 +18,6 @@ public class EntityManager {
 		entity.worldY = y;
 	}
 	
-	public void killEntity(Entity entity) {
-		entity.removeBody();
-	}
-	
 	public int currentEntities() {
 		int n = 0;
 		for (Body e : GamePanel.bodies) {

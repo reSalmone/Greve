@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 import entity.Entity;
 import entity.Projectile;
-import tiles.Tile;
+import tile.Tile;
 
 public class CollisionManager {
 	GamePanel gp;

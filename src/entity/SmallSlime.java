@@ -13,6 +13,7 @@ public class SmallSlime extends Entity {
 
 	public SmallSlime(GamePanel gp) {
 		super(gp);
+		
 		speed = 1;
 		currentSpeed = speed;
 		
@@ -43,6 +44,7 @@ public class SmallSlime extends Entity {
 		animationMap.put("w", left);
 		animationMap.put("e", right);
 		
+		//you have to make the other direction animations
 		animationMap.put("ne", up);
 		animationMap.put("nw", up);
 		animationMap.put("se", up);
@@ -52,57 +54,30 @@ public class SmallSlime extends Entity {
 	}
 	
 	public void update() {
+		//random direction every 3s, 50% of the times
 		if (Utility.coolDown(checkTime, 3000)) {
 			checkTime = GamePanel.timeMilli;
 			if (Utility.chance(50)) {
 				moving = true;
-				double r = Utility.randomNumber(100);
-				if (r <= 25) {
-					direction = "n";
-					directionAngle = 90;
-				}
-				if (r > 25 && r <= 50) {
-					direction = "s";
-					directionAngle = 270;
-				}
-				if (r > 50 && r <= 75) {
-					directionAngle = 180;
-				}
-				if (r > 75 && r <= 100) {
-					directionAngle = 0;
-				}
+				directionAngle = (int) Utility.randomNumber(360);
+				setDirection();
 			} else {
 				moving = false;
 			}
 		}
+		
+		//stops after a second and chills for 2
 		if (Utility.coolDown(checkTime, 1000)) {
 			moving = false;
 		}
 		
+		//for some reason it lags when the player moves
+		//move
 		if (moving) {
-			double newPosX = 0;
-			double newPosY = 0;
-			if (direction == "n") {
-				newPosX = worldY - currentSpeed;
-			}
-			if (direction == "s") {
-				newPosX = worldY + currentSpeed;
-			}
-			if (direction == "w") {
-				newPosX = worldX - currentSpeed;
-			}
-			if (direction == "e") {
-				newPosX = worldX + currentSpeed;
-			}
-			isColliding = false;
-			gp.collisionM.checkTile(this, newPosX, worldY);
-			gp.collisionM.checkCollision(this, newPosX, worldY);
-			if (!isColliding) { worldX = newPosX; }
+			double newPosX = worldX + currentSpeed * Math.cos(Math.toRadians(directionAngle));
+			double newPosY = worldY - currentSpeed * Math.sin(Math.toRadians(directionAngle));
 			
-			isColliding = false;
-			gp.collisionM.checkTile(this, worldX, newPosY);
-			gp.collisionM.checkCollision(this, worldX, newPosY);
-			if (!isColliding) { worldY = newPosY; }
+			checkCollisions(newPosX, newPosY);
 		}
 	}	
 

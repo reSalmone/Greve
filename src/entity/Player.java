@@ -39,8 +39,8 @@ public class Player extends Entity{
 		finalScreenY = screenY;
 		
 		collisionArea = new Rectangle(8 * GamePanel.scale, 11 * GamePanel.scale, 17 * GamePanel.scale, 13 * GamePanel.scale);
-		int startPosX = 5;
-		int startPosy = 2;
+		int startPosX = 2;
+		int startPosy = 13;
 		
 		worldX = gp.tileSize * startPosX;
 		worldY = gp.tileSize * startPosy;
@@ -91,6 +91,7 @@ public class Player extends Entity{
 	
 	public void update() {
 		
+		//jumping mechanic
 		if (jumping) {
 			if (finalScreenY > screenY - 30) {
 				finalScreenY -= 3;
@@ -98,14 +99,8 @@ public class Player extends Entity{
 				jumping = false;
 			}
 		}
-		
 		if (!jumping && finalScreenY < screenY) {
-			//if (keyH.jump) {
-			//	finalScreenY += 0.5;
-			//} else {
-				finalScreenY += 1.5;
-			//}
-			
+			finalScreenY += 1.5;
 		}
 		
 		//key: space
@@ -113,7 +108,7 @@ public class Player extends Entity{
 			Slimeball slimeB = new Slimeball(gp, this);
 			slimeB.directionAngle = directionAngle;
 			slimeB.thrower = this;
-			entityM.spawnEntity(slimeB, worldX + finalScreenX - screenX - 1, worldY + finalScreenY - screenY - 1);
+			entityM.spawnEntity(slimeB, worldX - 1, worldY - 1);
 			
 			lastShot = GamePanel.timeMilli;
 		}
@@ -131,6 +126,7 @@ public class Player extends Entity{
 			//if player is moving set it's current speed
 			currentSpeed = speed;
 			
+			//key: shift
 			if (keyH.shift) {
 				currentSpeed = shiftSpeed;
 			} else {
@@ -143,57 +139,25 @@ public class Player extends Entity{
 				double newPosX = worldX + currentSpeed * Math.cos(Math.toRadians(directionAngle));
 				double newPosY = worldY - currentSpeed * Math.sin(Math.toRadians(directionAngle));
 				
-				isColliding = false;
-				gp.collisionM.checkTile(this, newPosX, worldY);
-				gp.collisionM.checkCollision(this, newPosX, worldY);
-				if (!isColliding) { worldX = newPosX; }
-				
-				isColliding = false;
-				gp.collisionM.checkTile(this, worldX, newPosY);
-				gp.collisionM.checkCollision(this, worldX, newPosY);
-				if (!isColliding) { worldY = newPosY; }
+				checkCollisions(newPosX, newPosY);
 			}
 			if (keyH.down) {
 				double newPosX = worldX + currentSpeed * Math.cos(Math.toRadians(directionAngle + 180));
 				double newPosY = worldY - currentSpeed * Math.sin(Math.toRadians(directionAngle + 180));
 				
-				isColliding = false;
-				gp.collisionM.checkTile(this, newPosX, worldY);
-				gp.collisionM.checkCollision(this, newPosX, worldY);
-				if (!isColliding) { worldX = newPosX; }
-				
-				isColliding = false;
-				gp.collisionM.checkTile(this, worldX, newPosY);
-				gp.collisionM.checkCollision(this, worldX, newPosY);
-				if (!isColliding) { worldY = newPosY; }
+				checkCollisions(newPosX, newPosY);
 			}
 			if (keyH.left) {
 				double newPosX = worldX + currentSpeed * Math.cos(Math.toRadians(directionAngle + 90));
 				double newPosY = worldY - currentSpeed * Math.sin(Math.toRadians(directionAngle + 90));
 				
-				isColliding = false;
-				gp.collisionM.checkTile(this, newPosX, worldY);
-				gp.collisionM.checkCollision(this, newPosX, worldY);
-				if (!isColliding) { worldX = newPosX; }
-				
-				isColliding = false;
-				gp.collisionM.checkTile(this, worldX, newPosY);
-				gp.collisionM.checkCollision(this, worldX, newPosY);
-				if (!isColliding) { worldY = newPosY; }
+				checkCollisions(newPosX, newPosY);
 			}
 			if (keyH.right) {
 				double newPosX = worldX + currentSpeed * Math.cos(Math.toRadians(directionAngle - 90));
 				double newPosY = worldY - currentSpeed * Math.sin(Math.toRadians(directionAngle - 90));
 				
-				isColliding = false;
-				gp.collisionM.checkTile(this, newPosX, worldY);
-				gp.collisionM.checkCollision(this, newPosX, worldY);
-				if (!isColliding) { worldX = newPosX; }
-				
-				isColliding = false;
-				gp.collisionM.checkTile(this, worldX, newPosY);
-				gp.collisionM.checkCollision(this, worldX, newPosY);
-				if (!isColliding) { worldY = newPosY; }
+				checkCollisions(newPosX, newPosY);
 			}
 		} else {
 			moving = false;

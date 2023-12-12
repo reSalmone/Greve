@@ -70,6 +70,34 @@ public class Entity extends Body{
 		
 	}
 	
+	//update the direction if the angle changes
+	public void setDirection() {
+		if (directionAngle <= 112.5 && directionAngle > 67.5) {
+			direction = "n";
+		}
+		if (directionAngle <= 67.5 && directionAngle > 22.5) {
+			direction = "ne";
+		}
+		if (directionAngle <= 22.5 || directionAngle > 337.5) {
+			direction = "e";
+		}
+		if (directionAngle <= 337.5 && directionAngle > 292.5) {
+			direction = "se";
+		}
+		if (directionAngle <= 292.5 && directionAngle > 247.5) {
+			direction = "s";
+		}
+		if (directionAngle <= 247.5 && directionAngle > 202.5) {
+			direction = "sw";
+		}
+		if (directionAngle <= 202.5 && directionAngle > 157.5) {
+			direction = "w";
+		}
+		if (directionAngle <= 157.5 && directionAngle > 112.5) {
+			direction = "nw";
+		}
+	}
+	
 	void animationMap() {
 		if (moving) {
 			if (Utility.coolDown(spriteTime, spriteChangeRate)) {
@@ -86,5 +114,19 @@ public class Entity extends Body{
 				currentSprite = 0;
 			}
 		}
+	}
+	
+	boolean checkCollisions(double newX, double newY) {
+		boolean collided = false;
+		isColliding = false;
+		gp.collisionM.checkTile(this, newX, worldY);
+		gp.collisionM.checkCollision(this, newX, worldY);
+		if (!isColliding) { worldX = newX; } else { collided = true; }
+		
+		isColliding = false;
+		gp.collisionM.checkTile(this, worldX, newY);
+		gp.collisionM.checkCollision(this, worldX, newY);
+		if (!isColliding) { worldY = newY; } else { collided = true; }
+		return collided;
 	}
 }

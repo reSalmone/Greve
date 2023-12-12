@@ -1,4 +1,4 @@
-package tiles;
+package tile;
 
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
@@ -22,7 +22,7 @@ public class TileManager {
 		tile = new Tile[10];
 		map = new int[gp.maxWorldX][gp.maxWorldY];
 		
-		loadMap("/maps/map1.txt");
+		loadMap("/maps/map2.txt");
 		getImage();
 	}
 	

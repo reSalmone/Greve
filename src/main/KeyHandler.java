@@ -56,7 +56,7 @@ public class KeyHandler implements KeyListener{
 			}
 			if (code == KeyEvent.VK_ESCAPE) {
 				if (!pause) {
-					GameState.state = GameState.state == 0 ? GameState.pause : GameState.play;
+					GameState.state = GameState.pause;
 					pause = true;
 				}
 			}
@@ -76,7 +76,7 @@ public class KeyHandler implements KeyListener{
 		if (GameState.state == GameState.pause) {
 			if (code == KeyEvent.VK_ESCAPE) {
 				if (!pause) {
-					GameState.state = GameState.state == 0 ? GameState.pause : GameState.play;
+					GameState.state = GameState.play;
 					pause = true;
 				}
 			}

@@ -13,7 +13,7 @@ import entity.EntityManager;
 import entity.Player;
 import entity.SmallSlime;
 import object.ObjectManager;
-import tiles.TileManager;
+import tile.TileManager;
 import ui.UI;
 
 public class GamePanel extends JPanel implements Runnable{
@@ -82,7 +82,7 @@ public class GamePanel extends JPanel implements Runnable{
 	}
 	
 	public void startGame() {
-		GameState.state = GameState.play;
+		GameState.state = GameState.title;
 	}
 	
 	public void startGameLoop() {
@@ -136,7 +136,7 @@ public class GamePanel extends JPanel implements Runnable{
 	
 	public void update() {
 		if (GameState.state == GameState.play) {
-			for (Body b: bodies) {
+			for (Body b : bodies) {
 				b.update();
 			}
 		}
@@ -151,53 +151,60 @@ public class GamePanel extends JPanel implements Runnable{
 		super.paintComponent(graphics);
 		Graphics2D g = (Graphics2D) graphics;
 		
-		//tile draw
-		tileM.draw(g);
-		
-		//player direction line draw
-		g.setColor(new Color(255, 255, 255, 150));
-    	Utility.drawLine(g, screenWidth / 2, screenHeight / 2 + 12, mouseX, mouseY, 3, range);
-		
-		//update lists
-		bodies.removeAll(bodiesToRemove);
-		bodiesToRemove.clear();
-		bodies.addAll(bodiesToAdd);
-		bodiesToAdd.clear();
-		
-		//shadow draw
-		for (Body b: bodies) {
-
-			//if there is a shadow
-			if (b.shadow != null) {
-				
-				//show it only if it's in the screen
-				if (Utility.isInScreen(this, b, player)) {
-					double screenX = b.worldX - player.worldX + player.screenX;
-					double screenY = b.worldY - player.worldY + player.screenY;
-					
-					g.drawImage(b.shadow, (int) screenX, (int) screenY + 8, null);
-				}
-			}
-		}
-		
-		//body draw
-		bodies.sort(Comparator.comparing(Body::getWorldY));
-		for (Body b: bodies) {
-			b.draw(g);
+		//title screen
+		if (GameState.state != GameState.title) {
+			//draw shit only if in a game
 			
-			//hit box draw
-			if (keyH.displayHitBox) {
-				if (Utility.isInScreen(this, b, player)) {
-					g.setColor(new Color(255, 0, 0));
+			//tile draw
+			tileM.draw(g);
+			
+			//player direction line draw
+			g.setColor(new Color(255, 255, 255, 150));
+	    	Utility.drawLine(g, screenWidth / 2, screenHeight / 2 + 12, mouseX, mouseY, 3, range);
+			
+			//update bodies lists
+			bodies.removeAll(bodiesToRemove);
+			bodiesToRemove.clear();
+			bodies.addAll(bodiesToAdd);
+			bodiesToAdd.clear();
+			
+			//shadow draw
+			for (Body b : bodies) {
+
+				//if there is a shadow
+				if (b.shadow != null) {
 					
-					double screenX = b.worldX - player.worldX + player.screenX;
-					double screenY = b.worldY - player.worldY + player.screenY;
-					
-					g.drawRect((int) screenX + b.collisionArea.x, (int) screenY + b.collisionArea.y, b.collisionArea.width, b.collisionArea.height);
-					//g.drawRect((int) screenX + tileSize / 2, (int) screenY + tileSize / 2, 1, 1);
+					//show it only if it's in the screen
+					if (Utility.isInScreen(this, b, player)) {
+						double screenX = b.worldX - player.worldX + player.screenX;
+						double screenY = b.worldY - player.worldY + player.screenY;
+						
+						g.drawImage(b.shadow, (int) screenX, (int) screenY + 8, null);
+					}
+				}
+			}
+			
+			//body draw
+			bodies.sort(Comparator.comparing(Body::getWorldY));
+			for (Body b : bodies) {
+				b.draw(g);
+				
+				//hit box draw
+				if (keyH.displayHitBox) {
+					if (Utility.isInScreen(this, b, player)) {
+						g.setColor(new Color(255, 0, 0));
+						
+						double screenX = b.worldX - player.worldX + player.screenX;
+						double screenY = b.worldY - player.worldY + player.screenY;
+						
+						g.drawRect((int) screenX + b.collisionArea.x, (int) screenY + b.collisionArea.y, b.collisionArea.width, b.collisionArea.height);
+						//body center draw
+						//g.drawRect((int) screenX + tileSize / 2, (int) screenY + tileSize / 2, 1, 1);
+					}
 				}
 			}
 		}
+		
 		
 		ui.draw(g);
 		

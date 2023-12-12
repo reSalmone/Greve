@@ -2,10 +2,10 @@ package main;
 
 public class GameState {
 	//GAME STATE
-	public static int state;
-	public final static int play = 0;
-	public final static int pause = 1;
-	public final static int inventoryState = 2;
+	public static String state;
+	public final static String play = "play";
+	public final static String pause = "pause";
+	public final static String title = "title";
 	
 	//make the states enum variables
 }

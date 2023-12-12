@@ -22,15 +22,27 @@ public class MouseHandler implements MouseListener, MouseMotionListener{
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		Point p = e.getPoint();
-		Component c = UI.getComponentAt((int) p.getX(), (int) p.getY());
-		if (c != null && c.name != null && c.name.equals("resume")) {
-			if (GameState.state == GameState.pause) {
-				GameState.state = GameState.state == 0 ? GameState.pause : GameState.play;
+		Component c = UI.getComponentAt((int) p.getX(), (int) p.getY(), GameState.state);
+		
+		//pause components
+		if (GameState.state == GameState.pause) {
+			if (c != null && c.name != null && c.name.equals("resume")) {
+				GameState.state = GameState.play;
+			}
+			if (c != null && c.name != null && c.name.equals("ts")) {
+				GameState.state = GameState.title;
 			}
 		}
-		if (c != null && c.name != null && c.name.equals("quit")) {
-			((JFrame) SwingUtilities.getWindowAncestor(gp)).dispose();
-			System.exit(0);
+		
+		//title components
+		if (GameState.state == GameState.title) {
+			if (c != null && c.name != null && c.name.equals("ng")) {
+				GameState.state = GameState.play;
+			}
+			if (c != null && c.name != null && c.name.equals("quit")) {
+				((JFrame) SwingUtilities.getWindowAncestor(gp)).dispose();
+				System.exit(0);
+			}
 		}
 	}
 
@@ -59,7 +71,6 @@ public class MouseHandler implements MouseListener, MouseMotionListener{
 		if (GameState.state == GameState.play) {
 			GamePanel.mouseX = e.getX();
 			GamePanel.mouseY = e.getY();
-			String looking = "";
 			
 			double centerX = gp.screenWidth / 2.0;
 	        double centerY = gp.screenHeight / 2.0 + 12; //because it's a little off since I want it below 12px the player
@@ -69,32 +80,8 @@ public class MouseHandler implements MouseListener, MouseMotionListener{
 
 	        double angle = Math.toDegrees(Math.atan2(dx, dy));
 	        angle = (450 - angle) % 360;
-			if (angle <= 112.5 && angle > 67.5) {
-				looking = "n";
-			}
-			if (angle <= 67.5 && angle > 22.5) {
-				looking = "ne";
-			}
-			if (angle <= 22.5 || angle > 337.5) {
-				looking = "e";
-			}
-			if (angle <= 337.5 && angle > 292.5) {
-				looking = "se";
-			}
-			if (angle <= 292.5 && angle > 247.5) {
-				looking = "s";
-			}
-			if (angle <= 247.5 && angle > 202.5) {
-				looking = "sw";
-			}
-			if (angle <= 202.5 && angle > 157.5) {
-				looking = "w";
-			}
-			if (angle <= 157.5 && angle > 112.5) {
-				looking = "nw";
-			}
-			gp.player.directionAngle = (int) angle;
-			gp.player.direction = looking;
+	        gp.player.directionAngle = (int) angle;
+	        gp.player.setDirection();
 		}
 	}
 }

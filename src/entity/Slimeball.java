@@ -17,9 +17,9 @@ public class Slimeball extends Projectile {
 		collidable = true;
 		
 		//this adds player's speed to the projectile's speed
-		/*if (thrower != null) {
-			speed += thrower.currentSpeed;
-		}*/
+		//if (thrower != null) {
+		//	speed += thrower.currentSpeed;
+		//}*/
 		
 		collisionArea = new Rectangle(11 * GamePanel.scale, 13 * GamePanel.scale, 19, 19);
 		
@@ -34,23 +34,13 @@ public class Slimeball extends Projectile {
 	public void update() {
 		if (Utility.coolDown(checkTime, 500)) {
 			checkTime = GamePanel.timeMilli;
-			gp.entityM.killEntity(this);
-			return;
+			removeBody();
 		}
 		
 		double newPosX = worldX + currentSpeed * Math.cos(Math.toRadians(directionAngle));
 		double newPosY = worldY - currentSpeed * Math.sin(Math.toRadians(directionAngle));
-		isColliding = false;
-		gp.collisionM.checkTile(this, newPosX, worldY);
-		gp.collisionM.checkCollision(this, newPosX, worldY);
-		if (!isColliding) { worldX = newPosX; } else {
-			removeBody();
-		}
 		
-		isColliding = false;
-		gp.collisionM.checkTile(this, worldX, newPosY);
-		gp.collisionM.checkCollision(this, worldX, newPosY);
-		if (!isColliding) { worldY = newPosY; } else {
+		if (checkCollisions(newPosX, newPosY)) {
 			removeBody();
 		}
 	}
